@@ -13,7 +13,7 @@
   "engines": {
     "node": ">=18"
   },
-  "name": "with-react-native-web",
+  "name": "recommended",
   "packageManager": "bun@1.1.26",
   "workspaces": [
     "apps/*",
