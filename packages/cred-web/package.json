@@ -1,0 +1,12 @@
+{
+  "name": "cred-web",
+  "module": "index.ts",
+  "type": "module",
+  "description": "Browser credential handler for passkey signatures in cosm-r1 lib",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
