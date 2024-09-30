@@ -1,5 +1,5 @@
 {
-  "name": "cred-web",
+  "name": "@vaariance/cred-web",
   "module": "index.ts",
   "type": "module",
   "description": "Browser credential handler for passkey signatures in cosm-r1 lib",

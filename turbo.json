@@ -13,6 +13,10 @@
     "lint": {},
     "clean": {
       "cache": false
-    }
+    },
+    "prebuild": {
+      "cache": false
+    },
+    "test": {}
   }
 }

@@ -1,22 +1,48 @@
 {
-  "name": "@repo/ui",
+  "name": "@vaariance/ui",
   "version": "0.0.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./*": "./dist/*",
+    "./styles.css": "./styles.css"
+  },
   "scripts": {
-    "build": "tsup",
+    "prebuild": "tsup",
     "dev": "tsup --watch",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
-    "@repo/typescript-config": "*",
+    "@vaariance/configs": "*",
+    "@vaariance/shared-types": "*",
     "@types/react": "^18.2.46",
     "@types/react-native": "^0.73.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-native": "^0.73.1"
-  }
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@rn-primitives/slot": "^1.0.4",
+    "@rn-primitives/types": "^1.0.4",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "lucide-react-native": "^0.446.0",
+    "react-native-svg": "15.2.0",
+    "tailwind-merge": "^2.5.2"
+  },
+  "peerDependencies": {
+    "expo": "*",
+    "react": "*",
+    "react-native": "*",
+    "nativewind": "*",
+    "tailwindcss-animate": "*"
+  },
+  "files": [
+    "dist",
+    "styles.css"
+  ]
 }

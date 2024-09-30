@@ -1,14 +1,12 @@
 "use client";
-
-import { Button } from "@repo/ui";
-
-import styles from "../styles/index.module.css";
+import "@vaariance/ui/styles.css";
+import { Button } from "@vaariance/ui";
 
 export default function Web() {
   return (
-    <div className={styles.container}>
+    <div className="flex-1 items-center justify-center">
       <h1>Web</h1>
-      <Button onClick={() => console.log("Pressed!")} text="Boop" />
+      <Button onPress={() => console.log("Pressed!")}>click me</Button>
     </div>
   );
 }

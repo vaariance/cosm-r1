@@ -1,5 +1,5 @@
 {
-  "name": "cosm-r1",
+  "name": "@vaariance/cosm-r1",
   "module": "index.ts",
   "type": "module",
   "devDependencies": {

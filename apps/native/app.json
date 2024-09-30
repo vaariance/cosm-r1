@@ -11,20 +11,16 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "updates": {
-      "fallbackToCacheTimeout": 0
-    },
-    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.variance.cosmr1"
+      "bundleIdentifier": "space.variance.internal"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#ffffff"
       },
-      "package": "com.variance.cosmr1"
+      "package": "space.variance.internal"
     },
     "web": {
       "favicon": "./assets/favicon.png"

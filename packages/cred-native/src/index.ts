@@ -6,7 +6,7 @@ import {
 
 // Import the native module. On web, it will be resolved to Cosmr1CredentialHandler.web.ts
 // and on native platforms to Cosmr1CredentialHandler.ts
-import { ChangeEventPayload } from "shared-types";
+//import { ChangeEventPayload } from "shared-types";
 
 import Cosmr1CredentialHandlerModule from "./Cosmr1CredentialHandlerModule";
 
@@ -25,8 +25,8 @@ const emitter = new EventEmitter(
   Cosmr1CredentialHandlerModule ?? NativeModulesProxy.Cosmr1CredentialHandler,
 );
 
-export function addChangeListener(
-  listener: (event: ChangeEventPayload) => void,
-): Subscription {
-  return emitter.addListener<ChangeEventPayload>("onChange", listener);
-}
+// export function addChangeListener(
+//   listener: (event: ChangeEventPayload) => void,
+// ): Subscription {
+//   return emitter.addListener<ChangeEventPayload>("onChange", listener);
+// }
