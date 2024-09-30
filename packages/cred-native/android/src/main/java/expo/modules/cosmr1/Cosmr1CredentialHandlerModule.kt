@@ -41,13 +41,13 @@ class Cosmr1CredentialHandlerModule : Module() {
     }
 
     Constants(
-      "timeout" to Constants.TIMEOUT,
-      "attestation" to Constants.ATTESTATION,
-      "authenticatorAttachment" to Constants.AUTHENTICATOR_ATTACHMENT,
-      "requireResidentKey" to Constants.REQUIRE_RESIDENT_KEY,
-      "residentKey" to Constants.RESIDENT_KEY,
-      "userVerification" to Constants.USER_VERIFICATION,
-      "pubKeyCredParam" to Constants.PUB_KEY_CRED_PARAM
+      "TIMEOUT" to Constants.TIMEOUT,
+      "ATTESTATION" to Constants.ATTESTATION,
+      "AUTHENTICATOR_ATTACHMENT" to Constants.AUTHENTICATOR_ATTACHMENT,
+      "REQUIRE_RESIDENT_KEY" to Constants.REQUIRE_RESIDENT_KEY,
+      "RESIDENT_KEY" to Constants.RESIDENT_KEY,
+      "USER_VERIFICATION" to Constants.USER_VERIFICATION,
+      "PUB_KEY_CRED_PARAM" to Constants.PUB_KEY_CRED_PARAM
     )
 
     Events(

@@ -1,13 +1,8 @@
+import Cosmr1CredentialHandlerModule from "@vaariance/cred-web";
 import { EventEmitter } from "expo-modules-core";
 
 const emitter = new EventEmitter({} as any);
 
-export default {
-  PI: Math.PI,
-  async setValueAsync(value: string): Promise<void> {
-    emitter.emit("onChange", { value });
-  },
-  hello() {
-    return "Hello world! 👋";
-  },
-};
+const webModule = Cosmr1CredentialHandlerModule(emitter);
+
+export default webModule;

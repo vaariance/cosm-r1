@@ -4,7 +4,8 @@
   "type": "module",
   "description": "Browser credential handler for passkey signatures in cosm-r1 lib",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "@vaariance/shared-types": "*"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

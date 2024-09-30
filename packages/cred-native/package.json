@@ -27,7 +27,8 @@
   "license": "MIT",
   "homepage": "https://github.com/vaariance/cosm-r1#readme",
   "dependencies": {
-    "shared-types": "*"
+    "@vaariance/shared-types": "*",
+    "@vaariance/cred-web": "*"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",

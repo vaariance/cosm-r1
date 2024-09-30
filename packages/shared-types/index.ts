@@ -48,105 +48,167 @@ export const Ok = <T>(value: T): Result<T, never> => ({
   map: <U>(f: (v: T) => U): Result<U, never> => Ok(f(value)),
 });
 
+export type Subscription = {
+  remove: () => void;
+};
+export type EventEmitter = {
+  addListener: <T extends Cosmr1CredentialHandlerModuleEvents>(
+    eventName: T,
+    listener: (event: EventTypeMap[T]) => void,
+  ) => Subscription;
+  removeAllListeners: (eventName: Cosmr1CredentialHandlerModuleEvents) => void;
+  removeSubscription: (subscription: Subscription) => void;
+  emit: <T extends Cosmr1CredentialHandlerModuleEvents>(
+    eventName: T,
+    params: EventTypeMap[T],
+  ) => void;
+};
+
+export type Cosmr1CredentialHandlerModuleEvents =
+  | "onRegistrationStarted"
+  | "onRegistrationFailed"
+  | "onRegistrationComplete"
+  | "onAuthenticationStarted"
+  | "onAuthenticationFailed"
+  | "onAuthenticationSuccess";
+
+export type EventTypeMap = {
+  onRegistrationStarted: CreateCredentialOptions;
+  onRegistrationComplete: PublicKeyCredential<
+    BufferSource,
+    AuthenticatorAttestationResponse<BufferSource>
+  > | null;
+  onRegistrationFailed: unknown;
+  onAuthenticationStarted: GetCredentialOptions;
+  onAuthenticationSuccess: PublicKeyCredential<
+    BufferSource,
+    AuthenticatorAssertionResponse<BufferSource>
+  > | null;
+  onAuthenticationFailed: unknown;
+};
+
 export type RelyingParty = {
   name: string;
   id: string;
 };
 
 export type UserEntity = {
-  id: string;
+  id: BufferSource;
   name: string;
   displayName: string;
 };
 
 export type AuthenticatorSelection = {
-  authenticatorAttachment: string;
+  authenticatorAttachment: AuthenticatorAttachment;
   requireResidentKey: boolean;
-  residentKey: string;
-  userVerification: string;
-};
-
-export type PublicKeyCredentialDescriptor = {
-  id: string;
-  type: string;
-  transports?: string[];
+  residentKey: ResidentKeyRequirement;
+  userVerification: UserVerificationRequirement;
 };
 
 export type ExclusiveCredentials = {
   items: PublicKeyCredentialDescriptor[];
 };
 
-export type PublicKeyCred = {
-  type: string;
-  alg: number;
+type ExclusiveCredentialsB64 = {
+  items: Pick<PublicKeyCredentialDescriptor, "type" | "transports"> &
+    { id: string }[];
 };
 
 export interface CreateCredentialOptions {
   rp: RelyingParty;
   user: UserEntity;
-  challenge: string;
-  pubKeyCredParams: PublicKeyCred[];
+  challenge: BufferSource;
+  pubKeyCredParams: PublicKeyCredentialParameters[];
   timeout: number;
   authenticatorSelection: AuthenticatorSelection;
-  attestation: string;
+  attestation: AttestationConveyancePreference;
   excludeCredentials?: PublicKeyCredentialDescriptor[];
 }
 
 export interface GetCredentialOptions {
-  challenge: string;
+  challenge: BufferSource;
   allowCredentials: PublicKeyCredentialDescriptor[];
   timeout: number;
-  userVerification: string;
-  rpId: string;
+  userVerification?: UserVerificationRequirement;
+  rpId?: string;
 }
 
 export const Constants = {
   TIMEOUT: 60000,
-  ATTESTATION: "direct",
-  AUTHENTICATOR_ATTACHMENT: "platform",
+  ATTESTATION: "direct" as AttestationConveyancePreference,
+  AUTHENTICATOR_ATTACHMENT: "platform" as AuthenticatorAttachment,
   REQUIRE_RESIDENT_KEY: true,
-  RESIDENT_KEY: "required",
-  USER_VERIFICATION: "required",
+  RESIDENT_KEY: "required" as ResidentKeyRequirement,
+  USER_VERIFICATION: "required" as UserVerificationRequirement,
+  PUB_KEY_CRED_PARAM: {
+    type: "public-key",
+    alg: -7,
+  } as PublicKeyCredentialParameters,
 };
 
-export type AttestationOptions = {
-  preferImmediatelyAvailableCred: boolean;
-  challenge: string;
+export type AttestationOptions<G = string | BufferSource> =
+  G extends BufferSource ? AttestationOptionsBinary : AttestationOptionsB64;
+
+export type AttestationOptionsBinary = {
+  preferImmediatelyAvailableCred?: boolean;
+  challenge: BufferSource;
   rp: RelyingParty;
   user: UserEntity;
-  timeout?: number;
-  attestation?: string;
+  timeout: number | null;
+  attestation: AttestationConveyancePreference | null;
   excludeCredentials?: ExclusiveCredentials;
   authenticatorSelection?: AuthenticatorSelection;
 };
 
-export type AssertionOptions = {
+export type AttestationOptionsB64 = Omit<
+  AttestationOptionsBinary,
+  "challenge" | "user" | "excludeCredentials"
+> & {
   challenge: string;
-  allowCredentials: PublicKeyCredentialDescriptor[];
-  timeout?: number;
-  userVerification?: string;
+  user: Pick<UserEntity, "name" | "displayName"> & { id: string };
+  excludeCredentials?: ExclusiveCredentialsB64;
+};
+
+export type AssertionOptions<H = string | BufferSource> = H extends BufferSource
+  ? AssertionOptionsBinary
+  : AssertionOptionsB64;
+
+export type AssertionOptionsBinary = {
+  challenge: BufferSource;
+  allowCredentials?: ExclusiveCredentials;
+  timeout: number | null;
+  userVerification?: UserVerificationRequirement;
   rpId?: string;
 };
 
+export type AssertionOptionsB64 = Omit<
+  AssertionOptionsBinary,
+  "challenge" | "allowCredentials"
+> & {
+  challenge: string;
+  allowCredentials?: ExclusiveCredentialsB64;
+};
+
 export type PublicKeyCredential<
-  T = AuthenticatorAttestationResponse | AuthenticatorAssertionResponse,
+  S = BufferSource | string,
+  T = AuthenticatorAttestationResponse<S> | AuthenticatorAssertionResponse<S>,
 > = {
   id: string;
-  rawId: ArrayBuffer;
+  rawId?: S;
   type: string;
-  response: T;
+  response?: T;
 };
 
-export type AuthenticatorAttestationResponse = {
-  attestationObject: ArrayBuffer;
-  clientDataJSON: ArrayBuffer;
+export type AuthenticatorAttestationResponse<T> = {
+  attestationObject: T;
+  clientDataJSON: T;
 };
 
-export type AuthenticatorAssertionResponse = {
-  authenticatorData: ArrayBuffer;
-  signature: ArrayBuffer;
-  clientDataJSON: ArrayBuffer;
-  userHandle: ArrayBuffer;
+export type AuthenticatorAssertionResponse<U> = {
+  authenticatorData: U;
+  signature: U;
+  clientDataJSON: U;
+  userHandle: U;
 };
 
 export type ClientDataObject = {
