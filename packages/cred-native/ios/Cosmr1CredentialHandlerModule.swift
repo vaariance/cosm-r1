@@ -12,7 +12,7 @@ public class Cosmr1CredentialHandlerModule: Module {
 
     // Sets constant properties on the module. Can take a dictionary or a closure that returns a dictionary.
     Constants([
-      "PI": Double.pi
+      "PILLL": Double.pi
     ])
 
     // Defines event names that the module can send to JavaScript.
@@ -32,13 +32,5 @@ public class Cosmr1CredentialHandlerModule: Module {
       ])
     }
 
-    // Enables the module to be used as a native view. Definition components that are accepted as part of the
-    // view definition: Prop, Events.
-    View(Cosmr1CredentialHandlerView.self) {
-      // Defines a setter for the `name` prop.
-      Prop("name") { (view: Cosmr1CredentialHandlerView, prop: String) in
-        print(prop)
-      }
-    }
   }
 }
