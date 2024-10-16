@@ -73,19 +73,19 @@ class PublicKeyCred : Record {
 }
 
 data class CreateCredentialOptions(
+  val challenge: String,
+
   val rp: RelyingParty,
 
-  val user: UserEntity = UserEntity(),
-
-  val challenge: String,
+  val user: UserEntity,
 
   val pubKeyCredParams: List<PublicKeyCred>,
 
   val timeout: Int?,
 
-  val authenticatorSelection: AuthenticatorSelection,
-
   val attestation: String?,
+
+  val authenticatorSelection: AuthenticatorSelection,
 
   val excludeCredentials: List<PublicKeyCredentialDescriptor>?
 )
@@ -93,11 +93,11 @@ data class CreateCredentialOptions(
 data class GetCredentialOptions(
   val challenge: String,
 
-  val allowCredentials: List<PublicKeyCredentialDescriptor>,
-
-  val timeout: Int?,
+  val allowCredentials: List<PublicKeyCredentialDescriptor>?,
 
   val userVerification: String?,
 
-  val rpId: String?
+  val timeout: Int?,
+
+  val rpId: String
 )

@@ -59,11 +59,13 @@ class Cosmr1CredentialHandlerModule : Module() {
       "onAuthenticationSuccess"
     )
 
-    AsyncFunction("authenticate") Coroutine { challenge: String,
-                                              timeout: Int?,
-                                              rpId: String?,
-                                              userVerification: String?,
-                                              allowCredentials: ExclusiveCredentials?
+    AsyncFunction("authenticate") Coroutine {
+        prefersImmediatelyAvailableCred: Boolean,
+        challenge: String,
+        timeout: Int?,
+        rpId: String,
+        userVerification: String?,
+        allowCredentials: ExclusiveCredentials?
       ->
 
       val getOptions = parseAssertionOptions(
@@ -74,22 +76,22 @@ class Cosmr1CredentialHandlerModule : Module() {
         userVerification
       )
       val getPublicKeyCredentialOption = GetPublicKeyCredentialOption(
-        requestJson = Gson().toJson(getOptions),
-      )
+        requestJson = Gson().toJson(getOptions))
       val getCredRequest = GetCredentialRequest(
-        listOf(getPublicKeyCredentialOption)
-      )
+        listOf(getPublicKeyCredentialOption),
+        preferImmediatelyAvailableCredentials = prefersImmediatelyAvailableCred)
       return@Coroutine authenticate(getCredRequest)
     }
 
-    AsyncFunction("register") Coroutine { prefersImmediatelyAvailableCred: Boolean,
-                                          challenge: String,
-                                          rp: RelyingParty,
-                                          user: UserEntity,
-                                          timeout: Int?,
-                                          attestation: String?,
-                                          excludeCredentials: ExclusiveCredentials?,
-                                          authenticatorSelection: AuthenticatorSelection?
+    AsyncFunction("register") Coroutine {
+        prefersImmediatelyAvailableCred: Boolean,
+        challenge: String,
+        rp: RelyingParty,
+        user: UserEntity,
+        timeout: Int?,
+        attestation: String?,
+        excludeCredentials: ExclusiveCredentials?,
+        authenticatorSelection: AuthenticatorSelection?
       ->
 
       val createOptions = parseAttestationOptions(
@@ -113,12 +115,12 @@ class Cosmr1CredentialHandlerModule : Module() {
     challenge: String,
     allowCredentials: ExclusiveCredentials?,
     timeout: Int?,
-    rpId: String?,
+    rpId: String,
     userVerification: String?
   ): GetCredentialOptions {
     return GetCredentialOptions(
       challenge = challenge,
-      allowCredentials = allowCredentials?.items ?: emptyList(),
+      allowCredentials = allowCredentials?.items,
       timeout = timeout ?: Constants.TIMEOUT,
       rpId = rpId,
       userVerification = userVerification ?: Constants.USER_VERIFICATION
@@ -141,7 +143,7 @@ class Cosmr1CredentialHandlerModule : Module() {
       pubKeyCredParams = listOf(PublicKeyCred()),
       timeout = timeout ?: Constants.TIMEOUT,
       attestation = attestation ?: Constants.ATTESTATION,
-      excludeCredentials = excludeCredentials?.items ?: emptyList(),
+      excludeCredentials = excludeCredentials?.items,
       authenticatorSelection = authenticatorSelection ?: AuthenticatorSelection()
     )
   }
@@ -160,7 +162,7 @@ class Cosmr1CredentialHandlerModule : Module() {
       handleAttestationResult(result)
     } catch (e: CreateCredentialException) {
       handleAttestationFailure(e)
-      null
+      throw e
     }
   }
 
@@ -233,7 +235,7 @@ class Cosmr1CredentialHandlerModule : Module() {
       handleAssertionResult(result)
     } catch (e: GetCredentialException) {
       handleAssertionFailure(e)
-      null
+      throw e
     }
   }
 
