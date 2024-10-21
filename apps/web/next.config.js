@@ -1,5 +1,10 @@
 module.exports = {
   reactStrictMode: true,
+  transpilePackages: [
+    "nativewind",
+    "react-native-css-interop",
+    "@vaariance/ui",
+  ],
   webpack: (config) => {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),

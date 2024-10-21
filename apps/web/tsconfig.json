@@ -1,6 +1,8 @@
 {
   "extends": "@vaariance/configs/typescript/nextjs.json",
   "compilerOptions": {
+    "moduleResolution": "Bundler",
+    "jsxImportSource": "nativewind",
     "plugins": [{ "name": "next" }]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

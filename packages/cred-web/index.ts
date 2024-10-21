@@ -186,7 +186,7 @@ const Cosmr1CredentialHandlerModule = (
       }),
   };
 
-  return Object.assign(moduleObject, mainFunctions);
+  return Object.assign(moduleObject, helpers, mainFunctions);
 };
 
 export default Cosmr1CredentialHandlerModule;
