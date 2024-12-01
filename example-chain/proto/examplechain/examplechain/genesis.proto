@@ -1,0 +1,17 @@
+syntax = "proto3";
+package examplechain.examplechain;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "examplechain/examplechain/params.proto";
+
+option go_package = "packages/example-chain/x/examplechain/types";
+
+// GenesisState defines the examplechain module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}

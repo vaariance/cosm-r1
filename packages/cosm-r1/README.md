@@ -1,5 +1,8 @@
 # cosm-r1
 
+A new cosmos-js side SDK fully compatible with nodejs, browser and native (expo) environments.
+using new primitives.
+
 To install dependencies:
 
 ```bash

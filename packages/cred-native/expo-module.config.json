@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android", "web"],
-  "ios": {
-    "modules": ["Cosmr1CredentialHandlerModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.cosmr1.Cosmr1CredentialHandlerModule"]
-  }
-}

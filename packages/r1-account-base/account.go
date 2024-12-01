@@ -2,6 +2,9 @@ package base
 
 import (
 	"context"
+	"crypto/sha256"
+	"encoding/base64"
+	"encoding/binary"
 	"errors"
 	"fmt"
 
@@ -115,18 +118,63 @@ func (a Account) Authenticate(ctx context.Context, msg *aa_interface_v1.MsgAuthe
 		return nil, fmt.Errorf("unable to parse sign mode: %w", err)
 	}
 
-	signature := msg.Tx.Signatures[msg.SignerIndex]
+	rawSignature := msg.Tx.Signatures[msg.SignerIndex]
 
 	signBytes, err := a.signingHandlers.GetSignBytes(ctx, signMode, signerData, txData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get sign bytes: %w", err)
 	}
 
-	if !pubKey.VerifySignature(signBytes, signature) {
+	clientDataJSON, authenticatorData, signature, err := parseWebAuthnSignature(rawSignature, signBytes)
+	if err != nil {
+		return nil, fmt.Errorf("failed parsing WebAuthn signature: %w", err)
+	}
+
+	// Compute actual signature from WebAuthn components
+	hash, err := computeWebAuthnSignature(clientDataJSON, authenticatorData)
+	if err != nil {
+		return nil, fmt.Errorf("failed computing WebAuthn signature: %w", err)
+	}
+
+	if !pubKey.VerifySignature(hash, signature) {
 		return nil, errors.New("signature verification failed")
 	}
 
 	return &aa_interface_v1.MsgAuthenticateResponse{}, nil
+}
+
+func parseWebAuthnSignature(rawSignature []byte, signBytes []byte) (string, []byte, []byte, error) {
+	// Extract offsets
+	passkeySigOffset := int(binary.BigEndian.Uint32(rawSignature[:4]))
+	clientDataJsonPartAOffset := int(binary.BigEndian.Uint32(rawSignature[4:8]))
+	clientDataJsonPartBOffset := int(binary.BigEndian.Uint32(rawSignature[8:12]))
+
+	// Extract components
+	passkeySigBytes := rawSignature[12:passkeySigOffset]
+	clientDataJsonPartA := rawSignature[passkeySigOffset:clientDataJsonPartAOffset]
+	clientDataJsonPartB := rawSignature[clientDataJsonPartAOffset:clientDataJsonPartBOffset]
+	authenticatorData := rawSignature[clientDataJsonPartBOffset:]
+
+	// Encode signBytes to base64
+	challenge := base64.RawURLEncoding.EncodeToString(signBytes)
+
+	// Construct full clientDataJSON
+	clientDataJSON := string(clientDataJsonPartA) + challenge + string(clientDataJsonPartB)
+
+	return clientDataJSON, authenticatorData, passkeySigBytes, nil
+}
+
+func computeWebAuthnSignature(clientDataJSON string, authenticatorData []byte) ([]byte, error) {
+	// Compute client data hash (SHA-256)
+	clientDataHash := sha256.Sum256([]byte(clientDataJSON))
+
+	// Concatenate authenticator data with client data hash
+	message := append(authenticatorData, clientDataHash[:]...)
+
+	// Compute final signature hash (SHA-256)
+	sigHash := sha256.Sum256(message)
+
+	return sigHash[:], nil
 }
 
 func parseSignMode(info *tx.ModeInfo) (signingv1beta1.SignMode, error) {

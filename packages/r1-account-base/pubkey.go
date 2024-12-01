@@ -1,15 +1,16 @@
 package base
 
 import (
+	"crypto/elliptic"
+	"errors"
 	"fmt"
 	"strings"
 
 	gogoproto "github.com/cosmos/gogoproto/proto"
-	dcrd_secp256k1 "github.com/decred/dcrd/dcrec/secp256k1/v4"
 
 	"cosmossdk.io/core/transaction"
 
-	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256k1"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/secp256r1"
 )
 
 // this file implements a general mechanism to plugin public keys to a baseaccount
@@ -30,10 +31,13 @@ type pubKeyImpl struct {
 	validate func(key PubKey) error
 }
 
-func WithSecp256K1PubKey() Option {
-	return WithPubKeyWithValidationFunc(func(pt *secp256k1.PubKey) error {
-		_, err := dcrd_secp256k1.ParsePubKey(pt.Key)
-		return err
+func WithSecp256R1PubKey() Option {
+	return WithPubKeyWithValidationFunc(func(pt *secp256r1.PubKey) error {
+		x, _ := elliptic.UnmarshalCompressed(elliptic.P256(), pt.Key.Bytes())
+		if x == nil {
+			return errors.New("invalid public key")
+		}
+		return nil
 	})
 }
 

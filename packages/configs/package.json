@@ -1,12 +1,5 @@
 {
   "name": "@vaariance/configs",
   "version": "0.0.0",
-  "private": true,
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "nativewind": "^4.0.1",
-    "tailwindcss-animate": "^1.0.7"
-  }
+  "private": true
 }

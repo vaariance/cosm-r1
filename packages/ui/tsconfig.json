@@ -1,9 +1,0 @@
-{
-  "extends": "@vaariance/configs/typescript/react-native-library",
-  "include": ["src", "nativewind-env.d.ts"],
-  "exclude": ["dist", "build", "node_modules"],
-  "compilerOptions": {
-    "strict": true,
-    "rootDir": "src"
-  }
-}

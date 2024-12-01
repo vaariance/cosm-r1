@@ -18,8 +18,8 @@ func ProvideAccount(in Inputs) accountstd.DepinjectAccount {
 	return accountstd.DepinjectAccount{MakeAccount: base.NewAccount("base", in.SignHandlersMap, in.Options...)}
 }
 
-func ProvideSecp256K1PubKey() base.Option {
-	return base.WithSecp256K1PubKey()
+func ProviderSecp256R1PubKey() base.Option {
+	return base.WithSecp256R1PubKey()
 }
 
 func ProvideCustomPubkey[T any, PT base.PubKeyG[T]]() base.Option {
